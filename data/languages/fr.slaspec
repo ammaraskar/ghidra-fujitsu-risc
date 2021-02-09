@@ -1,0 +1,82 @@
+# Definitions from https://www.fujitsu.com/downloads/MICRO/fma/pdfmcu/CM71-00101-4E.pdf
+#   FR Family
+#   32 bit microcontroller
+#   Instruction Manual
+
+define endian=big;
+define alignment=2;
+
+define space ram type=ram_space size=4 default;
+define space register type=register_space size=4;
+
+# General purpose registers.
+define register offset=0 size=4 [R0 R1 R2 R3 R4 R5 R6 R7 R8 R9 R10 R11 R12 R13 R14 R15];
+# Missing the Program Status (PS) register here, it's modelled later.
+define register offset=0x50 size=4 [PC TBR RP SSP USP];
+# Special 8-byte multiplication/divsion register.
+define register offset=0x100 size=8 [MD];
+define register offset=0x100 size=4 [MDH];
+define register offset=0x104 size=4 [MDL];
+
+# Program Status register parts:
+# 1. Status Bits
+define register offset=0x150 size=1 [_ _ S I N Z V C];
+# 2. Interrupt Level Mask
+define register offset=0x200 size=1 [ILM];
+
+
+define token instr(16)
+    type_a_Ri = (0, 3)
+    type_a_Rj = (4, 7)
+    type_a_OP = (8, 15)
+
+    type_b_Ri = (0, 3)
+    type_b_i8 = (4, 11)
+    type_b_OP = (12, 15)
+
+    type_c_Ri = (0, 3)
+    type_c_i4 = (4, 7)
+    type_c_OP = (8, 15)
+
+    type_d_u8 = (0, 7)
+    type_d_OP = (8, 15)
+
+    type_e_Ri = (0, 3)
+    type_e_Rs = (0, 3)
+    type_e_OP = (4, 15)
+
+    type_f_rel11 = (0, 10)
+    type_f_OP = (11, 15)
+
+    opcode_00_15 = (0, 15)
+;
+
+attach variables [type_a_Ri type_a_Rj type_b_Ri type_c_Ri type_e_Ri] [
+    R0 R1 R2 R3 R4 R5 R6 R7 R8 R9 R10 R11 R12 R13 R14 R15
+];
+attach variables [type_e_Rs] [
+    TBR RP SSP USP MDH MDL _ _ _ _ _ _ _ _ _ _
+];
+
+macro resultFlags(result) {
+    Z = (result == 0);
+	N = (result s< 0);
+}
+
+macro additionResultFlags(operand_1, operand_2) {
+    result = operand_1 + operand_2;
+    resultFlags(result);
+
+    result_sign = result[31, 1];
+    V = (operand_1[31, 1] ^ result_sign) & (operand_2[31, 1] ^ result_sign);
+}
+
+:ADD type_a_Rj, type_a_Ri   is type_a_OP=0b10100110 & type_a_Rj & type_a_Ri
+{
+    additionResultFlags(type_a_Ri, type_a_Rj);
+    type_a_Ri = type_a_Ri + type_a_Rj;
+}
+
+:NOP    is opcode_00_15=0b1001111110100000
+{
+}
