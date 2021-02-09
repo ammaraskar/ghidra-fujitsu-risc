@@ -1,5 +1,7 @@
 # Ghidra Fujitsu RISC (FR) Processor Module
 
+![CI](https://github.com/ammaraskar/ghidra-fujitsu-risc/workflows/CI/badge.svg)
+
 A (WIP) Ghidra processor module for the [Fujitsu RISC (FR)](https://en.wikipedia.org/wiki/Fujitsu_FR)
 processor family. This is mostly a personal project to aid with the reversing
 of a Nikon D3100's camera firmware.
@@ -16,6 +18,4 @@ of a Nikon D3100's camera firmware.
 
 1. Clone the repo and its submodules.
 
-2. Make sure you have `bison` and `flex` installed.
-
-3. `make test`
+2. `make test`
