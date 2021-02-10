@@ -36,6 +36,7 @@ define token instr(16)
 
     type_c_Ri = (0, 3)
     type_c_i4 = (4, 7)
+    type_c_i4_signed = (4, 7) signed
     type_c_OP = (8, 15)
 
     type_d_u8 = (0, 7)
@@ -90,14 +91,28 @@ is type_c_OP=0b10100100 & type_c_Ri & type_c_i4
     type_c_Ri = result;
 }
 
-:ADD2 #type_c_i4, type_c_Ri
-is type_c_OP=0b10100101 & type_c_Ri & type_c_i4
+:ADD2 #type_c_i4_signed, type_c_Ri
+is type_c_OP=0b10100101 & type_c_Ri & type_c_i4_signed
 {
-    local extended_imm4 = sext(type_c_i4:4);
+    local extended_imm4 = sext(type_c_i4_signed:4);
     local result:4 = type_c_Ri + extended_imm4;
 
     additionResultFlags(extended_imm4, type_c_Ri, result);
     type_c_Ri = result;
+}
+
+:ADDC type_a_Rj, type_a_Ri
+is type_a_OP=0b10100111 & type_a_Rj & type_a_Ri
+{
+    local registers_result = type_a_Ri + type_a_Rj;
+    local result = registers_result + zext(C);
+
+    additionResultFlags(type_a_Ri, type_a_Rj, result);
+    type_a_Ri = result;
+
+    # Some different handling of the carry flag here to account for three
+    # operands.
+    C = scarry(registers_result, zext(C));
 }
 
 :NOP

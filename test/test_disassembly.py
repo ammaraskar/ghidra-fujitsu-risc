@@ -16,7 +16,8 @@ class DisassemblyTest(unittest.TestCase):
         (b'\x9F\xA0', 'NOP'),
         (b'\xA6\x39', 'ADD R3, R9'),
         (b'\xA4\x52', 'ADD #0x5, R2'),
-        (b'\xA5\xF4', 'ADD2 #0xf, R4')
+        (b'\xA5\xF4', 'ADD2 #-0x1, R4'),
+        (b'\xA7\x0F', 'ADDC R0, R15'),
     ]
 
     def test_single_opcodes(self):
@@ -24,6 +25,7 @@ class DisassemblyTest(unittest.TestCase):
             with self.subTest(msg=disassembly):
                 actual_disassembly = disassemble(bytecode)
                 self.assertIn(disassembly.encode(), actual_disassembly)
+
 
 if __name__ == '__main__':
     unittest.main()
