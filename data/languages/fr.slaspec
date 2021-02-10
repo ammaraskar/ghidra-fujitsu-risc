@@ -69,7 +69,7 @@ macro additionResultFlags(operand_1, operand_2, result) {
 
     local result_sign = result[31, 1];
     V = (operand_1[31, 1] ^ result_sign) & (operand_2[31, 1] ^ result_sign);
-    C = scarry(operand_1:4, operand_2:4);
+    C = scarry(operand_1, operand_2);
 }
 
 :ADD type_a_Rj, type_a_Ri
@@ -84,8 +84,8 @@ is type_a_OP=0b10100110 & type_a_Rj & type_a_Ri
 :ADD #type_c_i4, type_c_Ri
 is type_c_OP=0b10100100 & type_c_Ri & type_c_i4
 {
-    local extended_imm4 = zext(type_c_i4:4);
-    local result:4 = type_c_Ri + extended_imm4;
+    local extended_imm4:4 = type_c_i4;
+    local result = type_c_Ri + extended_imm4;
 
     additionResultFlags(extended_imm4, type_c_Ri, result);
     type_c_Ri = result;
@@ -94,8 +94,8 @@ is type_c_OP=0b10100100 & type_c_Ri & type_c_i4
 :ADD2 #type_c_i4_signed, type_c_Ri
 is type_c_OP=0b10100101 & type_c_Ri & type_c_i4_signed
 {
-    local extended_imm4 = sext(type_c_i4_signed:4);
-    local result:4 = type_c_Ri + extended_imm4;
+    local extended_imm4:4 = type_c_i4_signed;
+    local result = type_c_Ri + extended_imm4;
 
     additionResultFlags(extended_imm4, type_c_Ri, result);
     type_c_Ri = result;
@@ -113,6 +113,13 @@ is type_a_OP=0b10100111 & type_a_Rj & type_a_Ri
     # Some different handling of the carry flag here to account for three
     # operands.
     C = scarry(registers_result, zext(C));
+}
+
+:ADDN type_a_Rj, type_a_Ri
+is type_a_OP=0b10100010 & type_a_Rj & type_a_Ri
+{
+    # Addition without affecting flags.
+    type_a_Ri = type_a_Ri + type_a_Rj;
 }
 
 :NOP
