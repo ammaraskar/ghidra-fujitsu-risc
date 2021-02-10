@@ -21,5 +21,10 @@ class DisassemblyTest(unittest.TestCase):
         disassembly = disassemble(add_r3_r9)
         self.assertIn(b'ADD R3, R9', disassembly)
 
+    def test_add_with_immediate(self):
+        add_5_r2 = bytes([0xA4, 0x52])
+        disassembly = disassemble(add_5_r2)
+        self.assertIn(b'ADD #0x5, R2', disassembly)
+
 if __name__ == '__main__':
     unittest.main()

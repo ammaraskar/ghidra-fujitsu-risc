@@ -63,18 +63,28 @@ macro resultFlags(result) {
 	N = (result s< 0);
 }
 
-macro additionResultFlags(operand_1, operand_2) {
-    result = operand_1 + operand_2;
+macro additionResultFlags(operand_1, operand_2, result) {
     resultFlags(result);
 
-    result_sign = result[31, 1];
+    local result_sign = result[31, 1];
     V = (operand_1[31, 1] ^ result_sign) & (operand_2[31, 1] ^ result_sign);
 }
 
 :ADD type_a_Rj, type_a_Ri   is type_a_OP=0b10100110 & type_a_Rj & type_a_Ri
 {
-    additionResultFlags(type_a_Ri, type_a_Rj);
-    type_a_Ri = type_a_Ri + type_a_Rj;
+    local result = type_a_Ri + type_a_Rj;
+
+    additionResultFlags(type_a_Ri, type_a_Rj, result);
+    type_a_Ri = result;
+}
+
+:ADD #type_c_i4, type_c_Ri  is type_c_OP=0b10100100 & type_c_Ri & type_c_i4
+{
+    local extended_imm4 = zext(type_c_i4:4);
+    local result:4 = type_c_Ri + extended_imm4;
+
+    additionResultFlags(extended_imm4, type_c_Ri, result);
+    type_c_Ri = result;
 }
 
 :NOP    is opcode_00_15=0b1001111110100000
