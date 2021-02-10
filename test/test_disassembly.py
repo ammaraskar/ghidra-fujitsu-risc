@@ -12,17 +12,17 @@ def disassemble(bytecode):
 
 class DisassemblyTest(unittest.TestCase):
     def test_noop(self):
-        single_noop = bytes([0x9F, 0xA0])
+        single_noop = b'\x9F\xA0'
         disassembly = disassemble(single_noop)
         self.assertIn(b'NOP', disassembly)
 
     def test_add(self):
-        add_r3_r9 = bytes([0xA6, 0x39])
+        add_r3_r9 = b'\xA6\x39'
         disassembly = disassemble(add_r3_r9)
         self.assertIn(b'ADD R3, R9', disassembly)
 
     def test_add_with_immediate(self):
-        add_5_r2 = bytes([0xA4, 0x52])
+        add_5_r2 = b'\xA4\x52'
         disassembly = disassemble(add_5_r2)
         self.assertIn(b'ADD #0x5, R2', disassembly)
 
