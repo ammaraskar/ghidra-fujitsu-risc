@@ -72,6 +72,14 @@ macro additionResultFlags(operand_1, operand_2, result) {
     C = scarry(operand_1, operand_2);
 }
 
+macro subtractionResultFlags(operand_1, operand_2, result) {
+    resultFlags(result);
+
+    local result_sign = result[31, 1];
+    V = (operand_1[31, 1] ^ result_sign) & (operand_2[31, 1] ^ result_sign);
+    C = sborrow(operand_1, operand_2);
+}
+
 :ADD type_a_Rj, type_a_Ri
 is type_a_OP=0b10100110 & type_a_Rj & type_a_Ri
 {
@@ -105,13 +113,14 @@ is type_c_OP=0b10100101 & type_c_Ri & type_c_i4_signed
 is type_a_OP=0b10100111 & type_a_Rj & type_a_Ri
 {
     local registers_result = type_a_Ri + type_a_Rj;
-    local result = registers_result + zext(C);
+    local c_tmp = zext(C);
+    local result = registers_result + c_tmp;
 
     additionResultFlags(type_a_Ri, type_a_Rj, result);
     type_a_Ri = result;
 
     # Different handling of the carry flag here to account for three operands.
-    C = scarry(registers_result, zext(C));
+    C = scarry(registers_result, c_tmp);
 }
 
 # ADDN opcodes do addition without affecting flags.
@@ -132,6 +141,34 @@ is type_c_OP=0b10100000 & type_c_Ri & type_c_i4
 is type_c_OP=0b10100001 & type_c_Ri & type_c_i4_signed
 {
     type_c_Ri = type_c_Ri + type_c_i4_signed;
+}
+
+:SUB type_a_Rj, type_a_Ri
+is type_a_OP=0b10101100 & type_a_Rj & type_a_Ri
+{
+    local result = type_a_Rj - type_a_Ri;
+
+    subtractionResultFlags(type_a_Rj, type_a_Ri, result);
+    type_a_Ri = result;
+}
+
+:SUBC type_a_Rj, type_a_Ri
+is type_a_OP=0b10101101 & type_a_Rj & type_a_Ri
+{
+    local registers_result = type_a_Rj - type_a_Ri;
+    local c_tmp = zext(C);
+    local result = registers_result - c_tmp;
+
+    subtractionResultFlags(type_a_Rj, type_a_Ri, result);
+
+    # Different handling of the carry flag here to account for three operands.
+    C = sborrow(registers_result, c_tmp);
+}
+
+:SUBN type_a_Rj, type_a_Ri
+is type_a_OP=0b10101110 & type_a_Rj & type_a_Ri
+{
+    type_a_Ri = type_a_Rj - type_a_Ri;
 }
 
 :NOP

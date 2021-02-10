@@ -21,6 +21,9 @@ class DisassemblyTest(unittest.TestCase):
         (b'\xA2\x69', 'ADDN R6, R9'),
         (b'\xA0\xF2', 'ADDN #0xf, R2'),
         (b'\xA1\x53', 'ADDN2 #0x5, R3'),
+        (b'\xAC\x85', 'SUB R8, R5'),
+        (b'\xAD\xC7', 'SUBC R12, R7'),
+        (b'\xAE\xED', 'SUBN R14, R13'),
     ]
 
     def test_single_opcodes(self):
