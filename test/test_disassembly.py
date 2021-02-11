@@ -43,10 +43,14 @@ class DisassemblyTest(unittest.TestCase):
         (b'\x81\x01', 'BANDH #0x0, R1'),
         (b'\x90\x12', 'BORL #0x1, R2'),
         (b'\x91\x23', 'BORH #0x2, R3'),
-        (b'\x98\x34', 'EORL #0x3, R4'),
-        (b'\x99\x45', 'EORH #0x4, R5'),
+        (b'\x98\x34', 'BEORL #0x3, R4'),
+        (b'\x99\x45', 'BEORH #0x4, R5'),
         (b'\x88\x56', 'BTSTL #0x5, R6'),
         (b'\x89\x67', 'BTSTH #0x6, R7'),
+        (b'\xAF\x78', 'MUL R7, R8'),
+        (b'\xAB\x89', 'MULU R8, R9'),
+        (b'\xBF\x9A', 'MULH R9, R10'),
+        (b'\xBB\xAB', 'MULUH R10, R11'),
     ]
 
     def test_single_opcodes(self):

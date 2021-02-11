@@ -360,6 +360,61 @@ is type_c_OP=0b10001001 & type_c_Ri & type_c_i4
     Z = (result == 0);
 }
 
+macro multiplicationResultFlags(result) {
+    N = (MDL s< 0);
+    V = (result & 0xFFFFFFFF) == result;
+    Z = (result == 0);
+}
+
+
+:MUL type_a_Rj, type_a_Ri
+is type_a_OP=0b10101111 & type_a_Rj & type_a_Ri
+{
+    local result:8 = sext(type_a_Rj) * sext(type_a_Ri);
+
+    MDL = result:4;
+    local upper_four_bytes = result >> 32;
+    MDH = upper_four_bytes:4;
+
+    multiplicationResultFlags(result);
+}
+
+:MULU type_a_Rj, type_a_Ri
+is type_a_OP=0b10101011 & type_a_Rj & type_a_Ri
+{
+    local result:8 = zext(type_a_Rj) * zext(type_a_Ri);
+
+    MDL = result:4;
+    local upper_four_bytes = result >> 32;
+    MDH = upper_four_bytes:4;
+
+    multiplicationResultFlags(result);
+}
+
+:MULH type_a_Rj, type_a_Ri
+is type_a_OP=0b10111111 & type_a_Rj & type_a_Ri
+{
+    local result:8 = sext(type_a_Rj:2) * sext(type_a_Ri:2);
+
+    MDL = result:4;
+    local upper_four_bytes = result >> 32;
+    MDH = upper_four_bytes:4;
+
+    multiplicationResultFlags(result);
+}
+
+:MULUH type_a_Rj, type_a_Ri
+is type_a_OP=0b10111011 & type_a_Rj & type_a_Ri
+{
+    local result:8 = zext(type_a_Rj:2) * zext(type_a_Ri:2);
+
+    MDL = result:4;
+    local upper_four_bytes = result >> 32;
+    MDH = upper_four_bytes:4;
+
+    multiplicationResultFlags(result);
+}
+
 :NOP
 is opcode_00_15=0b1001111110100000
 {
