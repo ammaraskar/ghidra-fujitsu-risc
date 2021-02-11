@@ -51,6 +51,12 @@ class DisassemblyTest(unittest.TestCase):
         (b'\xAB\x89', 'MULU R8, R9'),
         (b'\xBF\x9A', 'MULH R9, R10'),
         (b'\xBB\xAB', 'MULUH R10, R11'),
+        (b'\x97\x4C', 'DIV0S R12'),
+        (b'\x97\x5D', 'DIV0U R13'),
+        (b'\x97\x6E', 'DIV1 R14'),
+        (b'\x97\x7F', 'DIV2 R15'),
+        (b'\x9F\x60', 'DIV3'),
+        (b'\x9F\x70', 'DIV4S'),
     ]
 
     def test_single_opcodes(self):

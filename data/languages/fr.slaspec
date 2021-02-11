@@ -23,6 +23,8 @@ define register offset=0x104 size=4 [MDL];
 define register offset=0x150 size=1 [_ _ S I N Z V C];
 # 2. Interrupt Level Mask
 define register offset=0x200 size=1 [ILM];
+# 3. System Condition Code
+define register offset=0x250 size=1 [D1 D0 T_FLAG];
 
 
 define token instr(16)
@@ -371,11 +373,7 @@ macro multiplicationResultFlags(result) {
 is type_a_OP=0b10101111 & type_a_Rj & type_a_Ri
 {
     local result:8 = sext(type_a_Rj) * sext(type_a_Ri);
-
-    MDL = result:4;
-    local upper_four_bytes = result >> 32;
-    MDH = upper_four_bytes:4;
-
+    MD = result;
     multiplicationResultFlags(result);
 }
 
@@ -383,11 +381,7 @@ is type_a_OP=0b10101111 & type_a_Rj & type_a_Ri
 is type_a_OP=0b10101011 & type_a_Rj & type_a_Ri
 {
     local result:8 = zext(type_a_Rj) * zext(type_a_Ri);
-
-    MDL = result:4;
-    local upper_four_bytes = result >> 32;
-    MDH = upper_four_bytes:4;
-
+    MD = result;
     multiplicationResultFlags(result);
 }
 
@@ -395,11 +389,7 @@ is type_a_OP=0b10101011 & type_a_Rj & type_a_Ri
 is type_a_OP=0b10111111 & type_a_Rj & type_a_Ri
 {
     local result:8 = sext(type_a_Rj:2) * sext(type_a_Ri:2);
-
-    MDL = result:4;
-    local upper_four_bytes = result >> 32;
-    MDH = upper_four_bytes:4;
-
+    MD = result;
     multiplicationResultFlags(result);
 }
 
@@ -407,12 +397,83 @@ is type_a_OP=0b10111111 & type_a_Rj & type_a_Ri
 is type_a_OP=0b10111011 & type_a_Rj & type_a_Ri
 {
     local result:8 = zext(type_a_Rj:2) * zext(type_a_Ri:2);
-
-    MDL = result:4;
-    local upper_four_bytes = result >> 32;
-    MDH = upper_four_bytes:4;
-
+    MD = result;
     multiplicationResultFlags(result);
+}
+
+:DIV0S type_e_Ri
+is type_e_OP=0b100101110100 & type_e_Ri
+{
+    D0 = (MDL s< 0);
+    D1 = (MDL s< 0) ^ (type_e_Ri s< 0);
+
+    MD = sext(MDL);
+}
+
+:DIV0U type_e_Ri
+is type_e_OP=0b100101110101 & type_e_Ri
+{
+    D0 = 0;
+    D1 = 0;
+    MDH = 0;
+}
+
+:DIV1 type_e_Ri
+is type_e_OP=0b100101110110 & type_e_Ri
+{
+    MD = MD << 1;
+    # Performs MDH + R_i if D1 == 1, otherwise MDH - R_i
+    if (D1 == 1) goto <positive>;
+
+    tmp = MDH - type_e_Ri;
+    C = sborrow(MDH, type_e_Ri);
+
+    goto <after_step>;
+<positive>
+    tmp = MDH + type_e_Ri;
+    C = scarry(MDH, type_e_Ri);
+
+<after_step>
+    Z = (tmp == 0);
+
+    if ((D0 ^ D1 ^ C) != 0) goto <end>;
+    MDH = tmp;
+    MDL[0,1] = 1;
+<end>
+}
+
+:DIV2 type_e_Ri
+is type_e_OP=0b100101110111 & type_e_Ri
+{
+    # Performs MDH + R_i if D1 == 1, otherwise MDH - R_i
+    if (D1 == 1) goto <positive>;
+
+    C = sborrow(MDH, type_e_Ri);
+
+    goto <after_step>;
+<positive>
+    C = scarry(MDH, type_e_Ri);
+
+<after_step>
+    if (Z != 1) goto <end>;
+    MDH = 0;
+<end>
+}
+
+:DIV3
+is opcode_00_15=0b1001111101100000
+{
+    if (Z != 1) goto <end>;
+    MDL = MDL + 1;
+<end>
+}
+
+:DIV4S
+is opcode_00_15=0b1001111101110000
+{
+    if (Z != 1) goto <end>;
+    MDL = 0 - MDL;
+<end>
 }
 
 :NOP
