@@ -27,6 +27,14 @@ class DisassemblyTest(unittest.TestCase):
         (b'\xAA\x12', 'CMP R1, R2'),
         (b'\xA8\x33', 'CMP #0x3, R3'),
         (b'\xA9\xD3', 'CMP2 #-0x3, R3'),
+        (b'\x82\x23', 'AND R2, R3'),
+        (b'\x84\x34', 'AND R3, @R4'),
+        (b'\x85\x45', 'ANDH R4, @R5'),
+        (b'\x86\x56', 'ANDB R5, @R6'),
+        (b'\x92\x78', 'OR R7, R8'),
+        (b'\x94\x89', 'OR R8, @R9'),
+        (b'\x95\x9A', 'ORH R9, @R10'),
+        (b'\x96\xAB', 'ORB R10, @R11'),
     ]
 
     def test_single_opcodes(self):
