@@ -260,6 +260,38 @@ is type_a_OP=0b10010110 & type_a_Rj & type_a_Ri
     *:1 type_a_Ri = result;
 }
 
+:EOR type_a_Rj, type_a_Ri
+is type_a_OP=0b10011010 & type_a_Rj & type_a_Ri
+{
+    local result = type_a_Rj ^ type_a_Ri;
+    resultFlags(result);
+    type_a_Ri = result;
+}
+
+:EOR type_a_Rj, @type_a_Ri
+is type_a_OP=0b10011100 & type_a_Rj & type_a_Ri
+{
+    local result = type_a_Rj ^ (*type_a_Ri);
+    resultFlags(result);
+    *type_a_Ri = result;
+}
+
+:EORH type_a_Rj, @type_a_Ri
+is type_a_OP=0b10011101 & type_a_Rj & type_a_Ri
+{
+    local result:2 = type_a_Rj:2 ^ (*:2 type_a_Ri);
+    resultFlags(result);
+    *:2 type_a_Ri = result;
+}
+
+:EORB type_a_Rj, @type_a_Ri
+is type_a_OP=0b10011110 & type_a_Rj & type_a_Ri
+{
+    local result:1 = type_a_Rj:1 ^ (*:1 type_a_Ri);
+    resultFlags(result);
+    *:1 type_a_Ri = result;
+}
+
 :NOP
 is opcode_00_15=0b1001111110100000
 {

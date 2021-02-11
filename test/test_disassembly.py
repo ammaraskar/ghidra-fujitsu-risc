@@ -35,6 +35,10 @@ class DisassemblyTest(unittest.TestCase):
         (b'\x94\x89', 'OR R8, @R9'),
         (b'\x95\x9A', 'ORH R9, @R10'),
         (b'\x96\xAB', 'ORB R10, @R11'),
+        (b'\x9A\xBC', 'EOR R11, R12'),
+        (b'\x9C\xCD', 'EOR R12, @R13'),
+        (b'\x9D\xDE', 'EORH R13, @R14'),
+        (b'\x9E\xEF', 'EORB R14, @R15'),
     ]
 
     def test_single_opcodes(self):
