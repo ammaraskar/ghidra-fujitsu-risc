@@ -641,6 +641,42 @@ is opcode_00_15=0b0000011110010000
     R15 = R15 + 4;
 }
 
+:LDUH @type_a_Rj, type_a_Ri
+is type_a_OP=0b00000101 & type_a_Rj & type_a_Ri
+{
+    type_a_Ri = zext(*:2 type_a_Rj);
+}
+
+:LDUH @("R13" + type_a_Rj), type_a_Ri
+is type_a_OP=0b00000001 & type_a_Rj & type_a_Ri
+{
+    type_a_Ri = zext(*:2 (type_a_Rj + R13));
+}
+
+:LDUH @("R14" + 2 * type_b_i8_signed), type_b_Ri
+is type_b_OP=0b0100 & type_b_i8_signed & type_b_Ri
+{
+    type_b_Ri = zext(*:2 (R14 + (2 * type_b_i8_signed)));
+}
+
+:LDUB @type_a_Rj, type_a_Ri
+is type_a_OP=0b00000110 & type_a_Rj & type_a_Ri
+{
+    type_a_Ri = zext(*:1 type_a_Rj);
+}
+
+:LDUB @("R13" + type_a_Rj), type_a_Ri
+is type_a_OP=0b00000010 & type_a_Rj & type_a_Ri
+{
+    type_a_Ri = zext(*:1 (type_a_Rj + R13));
+}
+
+:LDUB @("R14" + type_b_i8_signed), type_b_Ri
+is type_b_OP=0b0110 & type_b_i8_signed & type_b_Ri
+{
+    type_b_Ri = zext(*:1 (R14 + type_b_i8_signed));
+}
+
 :NOP
 is opcode_00_15=0b1001111110100000
 {
