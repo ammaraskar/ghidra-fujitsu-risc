@@ -95,6 +95,11 @@ class DisassemblyTest(unittest.TestCase):
         (b'\x16\xCD', 'STB R13, @R12'),
         (b'\x12\xDE', 'STB R14, @(R13 + R13)'),
         (b'\x71\x07', 'STB R7, @(R14 + 0x10)'),
+        (b'\x8B\xEF', 'MOV R14, R15'),
+        (b'\xB7\x20', 'MOV SSP, R0'),
+        (b'\x17\x11', 'MOV PS, R1'),
+        (b'\xB3\x31', 'MOV R1, USP'),
+        (b'\x07\x18', 'MOV R8, PS'),
     ]
 
     def test_single_opcodes(self):
