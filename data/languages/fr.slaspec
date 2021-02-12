@@ -51,7 +51,7 @@ define token instr(16)
     type_e_Rs = (0, 3)
     type_e_OP = (4, 15)
 
-    type_f_rel11 = (0, 10)
+    type_f_rel11 = (0, 10) signed
     type_f_OP = (11, 15)
 
     opcode_00_15 = (0, 15)
@@ -831,6 +831,35 @@ is type_e_OP=0b000001110001 & type_e_Ri
     D1 = new_PS[10,1];
 
     ILM = new_PS[16,4];
+}
+
+:JMP @type_e_Ri
+is type_e_OP=0b100101110000 & type_e_Ri
+{
+    goto type_e_Ri;
+}
+
+dest: rel is type_f_rel11 [ rel = inst_next + type_f_rel11*2; ] {
+    export *:4 rel;
+}
+
+:CALL dest
+is type_f_OP=0b11010 & dest
+{
+    RP = inst_next;
+}
+
+:CALL @type_e_Ri
+is type_e_OP=0b100101110001 & type_e_Ri
+{
+    RP = inst_next;
+    call type_e_Ri;
+}
+
+:RET
+is opcode_00_15=0b1001011100100000
+{
+    return [RP];
 }
 
 :NOP

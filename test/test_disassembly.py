@@ -100,6 +100,10 @@ class DisassemblyTest(unittest.TestCase):
         (b'\x17\x11', 'MOV PS, R1'),
         (b'\xB3\x31', 'MOV R1, USP'),
         (b'\x07\x18', 'MOV R8, PS'),
+        (b'\x97\x0B', 'JMP @R11'),
+        (b'\xD0\x04', 'CALL 0xa'),
+        (b'\x97\x1B', 'CALL @R11'),
+        (b'\x97\x20', 'RET'),
     ]
 
     def test_single_opcodes(self):
