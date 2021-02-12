@@ -57,6 +57,23 @@ class DisassemblyTest(unittest.TestCase):
         (b'\x97\x7F', 'DIV2 R15'),
         (b'\x9F\x60', 'DIV3'),
         (b'\x9F\x70', 'DIV4S'),
+        (b'\xB6\xA0', 'LSL R10, R0'),
+        (b'\xB4\xB1', 'LSL #0xb, R1'),
+        (b'\xB5\xC2', 'LSL2 #0xc, R2'),
+        (b'\xB2\xD3', 'LSR R13, R3'),
+        (b'\xB0\xE4', 'LSR #0xe, R4'),
+        (b'\xB1\xF5', 'LSR2 #0xf, R5'),
+        (b'\xBA\x06', 'ASR R0, R6'),
+        (b'\xB8\x17', 'ASR #0x1, R7'),
+        (b'\xB9\x28', 'ASR2 #0x2, R8'),
+        (b'\x9F\x83\xDE\xAD\xBE\xEF', 'LDI:32 #0xdeadbeef, R3'),
+        (b'\x9B\xCA\xAF\xEB', 'LDI:20 #0xcafeb, R10'),
+        (b'\xCC\xAF', 'LDI:8 #0xca, R15'),
+        (b'\x04\x18', 'LD @R1, R8'),
+        (b'\x00\x29', 'LD @(R13 + R2), R9'),
+        (b'\x28\x23', 'LD @(R14 + 4 * -0x7e), R3'),
+        (b'\x03\xF4', 'LD @(R15 + 4 * 0xf), R4'),
+        (b'\x07\x05', 'LD @R15+, R5'),
     ]
 
     def test_single_opcodes(self):

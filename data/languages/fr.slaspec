@@ -34,6 +34,7 @@ define token instr(16)
 
     type_b_Ri = (0, 3)
     type_b_i8 = (4, 11)
+    type_b_i8_signed = (4, 11) signed
     type_b_OP = (12, 15)
 
     type_c_Ri = (0, 3)
@@ -52,6 +53,12 @@ define token instr(16)
     type_f_OP = (11, 15)
 
     opcode_00_15 = (0, 15)
+;
+define token data16 (16)
+    imm16 = (0, 15)
+;
+define token data32 (32)
+    imm32 = (0, 31)
 ;
 
 attach variables [type_a_Ri type_a_Rj type_b_Ri type_c_Ri type_e_Ri] [
@@ -474,6 +481,136 @@ is opcode_00_15=0b1001111101110000
     if (Z != 1) goto <end>;
     MDL = 0 - MDL;
 <end>
+}
+
+:LSL type_a_Rj, type_a_Ri
+is type_a_OP=0b10110110 & type_a_Rj & type_a_Ri
+{
+    local result = type_a_Ri << type_a_Rj;
+    type_a_Ri = result;
+
+    resultFlags(result);
+}
+
+:LSL #type_c_i4, type_c_Ri
+is type_c_OP=0b10110100 & type_c_Ri & type_c_i4
+{
+    local result = type_c_Ri << type_c_i4;
+    type_c_Ri = result;
+
+    resultFlags(result);
+}
+
+:LSL2 #type_c_i4, type_c_Ri
+is type_c_OP=0b10110101 & type_c_Ri & type_c_i4
+{
+    local result = type_c_Ri << (type_c_i4 + 16);
+    type_c_Ri = result;
+
+    resultFlags(result);
+}
+
+:LSR type_a_Rj, type_a_Ri
+is type_a_OP=0b10110010 & type_a_Rj & type_a_Ri
+{
+    local result = type_a_Ri >> type_a_Rj;
+    type_a_Ri = result;
+
+    resultFlags(result);
+}
+
+:LSR #type_c_i4, type_c_Ri
+is type_c_OP=0b10110000 & type_c_Ri & type_c_i4
+{
+    local result = type_c_Ri >> type_c_i4;
+    type_c_Ri = result;
+
+    resultFlags(result);
+}
+
+:LSR2 #type_c_i4, type_c_Ri
+is type_c_OP=0b10110001 & type_c_Ri & type_c_i4
+{
+    local result = type_c_Ri >> (type_c_i4 + 16);
+    type_c_Ri = result;
+
+    resultFlags(result);
+}
+
+:ASR type_a_Rj, type_a_Ri
+is type_a_OP=0b10111010 & type_a_Rj & type_a_Ri
+{
+    local result = type_a_Ri s>> type_a_Rj;
+    type_a_Ri = result;
+
+    resultFlags(result);
+}
+
+:ASR #type_c_i4, type_c_Ri
+is type_c_OP=0b10111000 & type_c_Ri & type_c_i4
+{
+    local result = type_c_Ri s>> type_c_i4;
+    type_c_Ri = result;
+
+    resultFlags(result);
+}
+
+:ASR2 #type_c_i4, type_c_Ri
+is type_c_OP=0b10111001 & type_c_Ri & type_c_i4
+{
+    local result = type_c_Ri s>> (type_c_i4 + 16);
+    type_c_Ri = result;
+
+    resultFlags(result);
+}
+
+:LDI":"32 #imm32, type_e_Ri
+is type_e_OP=0b100111111000 & type_e_Ri; imm32
+{
+    type_e_Ri = imm32;
+}
+
+:LDI":"20 #imm20, type_c_Ri
+is type_c_OP=0b10011011 & type_c_Ri & type_c_i4; imm16[ imm20 = (type_c_i4 << 16) | imm16; ]
+{
+    type_c_Ri = imm20;
+}
+
+:LDI":"8 #type_b_i8, type_b_Ri
+is type_b_OP=0b1100 & type_b_i8 & type_b_Ri
+{
+    type_b_Ri = type_b_i8;
+}
+
+:LD @type_a_Rj, type_a_Ri
+is type_a_OP=0b00000100 & type_a_Rj & type_a_Ri
+{
+    type_a_Ri = *type_a_Rj;
+}
+
+:LD @("R13" + type_a_Rj), type_a_Ri
+is type_a_OP=0b00000000 & type_a_Rj & type_a_Ri
+{
+    type_a_Ri = *(type_a_Rj + R13);
+}
+
+:LD @("R14" + 4 * type_b_i8_signed), type_b_Ri
+is type_b_OP=0b0010 & type_b_i8_signed & type_b_Ri
+{
+    type_b_Ri = *(R14 + (4 * type_b_i8_signed));
+}
+
+:LD @("R15" + 4 * type_c_i4), type_c_Ri
+is type_c_OP=0b00000011 & type_c_Ri & type_c_i4
+{
+    type_c_Ri = *(R15 + (4 * type_c_i4));
+}
+
+:LD @"R15+", type_e_Ri
+is type_e_OP=0b000001110000 & type_e_Ri
+{
+    type_e_Ri = *R15;
+    R15 = R15 + 4;
 }
 
 :NOP
