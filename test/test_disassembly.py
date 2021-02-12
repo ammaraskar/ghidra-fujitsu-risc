@@ -82,6 +82,13 @@ class DisassemblyTest(unittest.TestCase):
         (b'\x06\x68', 'LDUB @R6, R8'),
         (b'\x02\x79', 'LDUB @(R13 + R7), R9'),
         (b'\x6F\xD6', 'LDUB @(R14 + -0x3), R6'),
+        (b'\x14\x8A', 'ST R10, @R8'),
+        (b'\x10\x9B', 'ST R11, @(R13 + R9)'),
+        (b'\x3F\x97', 'ST R7, @(R14 + 4 * -0x7)'),
+        (b'\x13\xBC', 'ST R12, @(R15 + 4 * 0xb)'),
+        (b'\x17\x03', 'ST R3, @-R15'),
+        (b'\x17\x83', 'ST USP, @-R15'),
+        (b'\x17\x90', 'ST PS, @-R15'),
     ]
 
     def test_single_opcodes(self):

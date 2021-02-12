@@ -677,6 +677,66 @@ is type_b_OP=0b0110 & type_b_i8_signed & type_b_Ri
     type_b_Ri = zext(*:1 (R14 + type_b_i8_signed));
 }
 
+:ST type_a_Ri, @type_a_Rj
+is type_a_OP=0b00010100 & type_a_Rj & type_a_Ri
+{
+    *type_a_Rj = type_a_Ri;
+}
+
+:ST type_a_Ri, @("R13" + type_a_Rj)
+is type_a_OP=0b00010000 & type_a_Rj & type_a_Ri
+{
+    *(R13 + type_a_Rj) = type_a_Ri;
+}
+
+:ST type_b_Ri, @("R14" + 4 * type_b_i8_signed) 
+is type_b_OP=0b0011 & type_b_i8_signed & type_b_Ri
+{
+    *(R14 + (4 * type_b_i8_signed)) = type_b_Ri;
+}
+
+:ST type_c_Ri, @("R15" + 4 * type_c_i4) 
+is type_c_OP=0b00010011 & type_c_Ri & type_c_i4
+{
+    *(R15 + (4 * type_c_i4)) = type_c_Ri;
+}
+
+:ST type_e_Ri, @"-R15" 
+is type_e_OP=0b000101110000 & type_e_Ri
+{
+    R15 = R15 - 4;
+    *R15 = type_e_Ri;
+}
+
+:ST type_e_Rs, @"-R15" 
+is type_e_OP=0b000101111000 & type_e_Rs
+{
+    R15 = R15 - 4;
+    *R15 = type_e_Rs;
+}
+
+:ST "PS", "@-R15"
+is opcode_00_15=0b0001011110010000
+{
+    local PS:4 = 0;
+
+    PS[0,1] = C;
+    PS[1,1] = V;
+    PS[2,1] = Z;
+    PS[3,1] = N;
+    PS[4,1] = I;
+    PS[5,1] = S;
+
+    PS[8,1] = T_FLAG;
+    PS[9,1] = D0;
+    PS[10,1] = D1;
+
+    PS[16,4] = ILM;
+
+    R15 = R15 - 4;
+    *R15 = PS;
+}
+
 :NOP
 is opcode_00_15=0b1001111110100000
 {
