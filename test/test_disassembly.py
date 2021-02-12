@@ -74,6 +74,8 @@ class DisassemblyTest(unittest.TestCase):
         (b'\x28\x23', 'LD @(R14 + 4 * -0x7e), R3'),
         (b'\x03\xF4', 'LD @(R15 + 4 * 0xf), R4'),
         (b'\x07\x05', 'LD @R15+, R5'),
+        (b'\x07\x83', 'LD @R15+, USP'),
+        (b'\x07\x90', 'LD @R15+, PS'),
     ]
 
     def test_single_opcodes(self):

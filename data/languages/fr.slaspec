@@ -613,6 +613,34 @@ is type_e_OP=0b000001110000 & type_e_Ri
     R15 = R15 + 4;
 }
 
+:LD @"R15+", type_e_Rs
+is type_e_OP=0b000001111000 & type_e_Rs
+{
+    type_e_Rs = *R15;
+    R15 = R15 + 4;
+}
+
+:LD "@R15+", "PS"
+is opcode_00_15=0b0000011110010000
+{
+    local new_PS:4 = *R15;
+
+    C = new_PS[0,1];
+    V = new_PS[1,1];
+    Z = new_PS[2,1];
+    N = new_PS[3,1];
+    I = new_PS[4,1];
+    S = new_PS[5,1];
+
+    T_FLAG = new_PS[8,1];
+    D0 = new_PS[9,1];
+    D1 = new_PS[10,1];
+
+    ILM = new_PS[16,4];
+
+    R15 = R15 + 4;
+}
+
 :NOP
 is opcode_00_15=0b1001111110100000
 {
