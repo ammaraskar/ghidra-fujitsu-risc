@@ -149,6 +149,14 @@ class DisassemblyTest(unittest.TestCase):
         (b'\x1C\x02', 'DMOV @R13+, @0x8'),
         (b'\x0B\x02', 'DMOV @0x8, @-R15'),
         (b'\x1B\x02', 'DMOV @R15+, @0x8'),
+        (b'\x09\x02', 'DMOVH @0x4, R13'),
+        (b'\x19\x02', 'DMOVH R13, @0x4'),
+        (b'\x0D\x02', 'DMOVH @0x4, @R13+'),
+        (b'\x1D\x02', 'DMOVH @R13+, @0x4'),
+        (b'\x0A\x02', 'DMOVB @0x2, R13'),
+        (b'\x1A\x02', 'DMOVB R13, @0x2'),
+        (b'\x0E\x02', 'DMOVB @0x2, @R13+'),
+        (b'\x1E\x02', 'DMOVB @R13+, @0x2'),
     ]
 
     def test_single_opcodes(self):

@@ -1161,6 +1161,58 @@ is type_d_u8 & type_d_OP=0b00011011 [ dir8 = type_d_u8 * 4; ]
     R15 = R15 + 4;
 }
 
+:DMOVH @dir8, "R13"
+is type_d_u8 & type_d_OP=0b00001001 [ dir8 = type_d_u8 * 2; ]
+{
+    R13 = *:2 dir8:4;
+}
+
+:DMOVH "R13", @dir8
+is type_d_u8 & type_d_OP=0b00011001 [ dir8 = type_d_u8 * 2; ]
+{
+    *:2 dir8:4 = R13;
+}
+
+:DMOVH @dir8, "@R13+"
+is type_d_u8 & type_d_OP=0b00001101 [ dir8 = type_d_u8 * 2; ]
+{
+    *:2 R13 = *:2 dir8:4;
+    R13 = R13 + 2;
+}
+
+:DMOVH "@R13+", @dir8
+is type_d_u8 & type_d_OP=0b00011101 [ dir8 = type_d_u8 * 2; ]
+{
+    *:2 dir8:4 = *:2 R13;
+    R13 = R13 + 2;
+}
+
+:DMOVB @type_d_u8, "R13"
+is type_d_u8 & type_d_OP=0b00001010
+{
+    R13 = *:1 type_d_u8:4;
+}
+
+:DMOVB "R13", @type_d_u8
+is type_d_u8 & type_d_OP=0b00011010
+{
+    *:1 type_d_u8:4 = R13;
+}
+
+:DMOVB @type_d_u8, "@R13+"
+is type_d_u8 & type_d_OP=0b00001110
+{
+    *:1 R13 = *:1 type_d_u8:4;
+    R13 = R13 + 1;
+}
+
+:DMOVB "@R13+", @type_d_u8
+is type_d_u8 & type_d_OP=0b00011110
+{
+    *:1 type_d_u8:4 = *:1 R13;
+    R13 = R13 + 1;
+}
+
 :NOP
 is opcode_00_15=0b1001111110100000
 {
