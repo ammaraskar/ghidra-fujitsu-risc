@@ -157,6 +157,12 @@ class DisassemblyTest(unittest.TestCase):
         (b'\x1A\x02', 'DMOVB R13, @0x2'),
         (b'\x0E\x02', 'DMOVB @0x2, @R13+'),
         (b'\x1E\x02', 'DMOVB @R13+, @0x2'),
+        (b'\xBC\x31', 'LDRES @R1+, #0x3'),
+        (b'\xBD\x31', 'STRES #0x3, @R1+'),
+        (b'\x9F\xCF\x02\x11', 'COPOP #R15, #0x4, 0x1, 0x1'),
+        (b'\x9F\xDF\x02\x11', 'COPLD #R15, #0x4, R1, 0x1'),
+        (b'\x9F\xEF\x02\x11', 'COPST #R15, #0x4, 0x1, R1'),
+        (b'\x9F\xFF\x02\x11', 'COPSV #R15, #0x4, 0x1, R1'),
     ]
 
     def test_single_opcodes(self):

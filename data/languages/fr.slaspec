@@ -64,7 +64,16 @@ define token data32 (32)
     imm32 = (0, 31)
 ;
 
-attach variables [type_a_Ri type_a_Rj type_b_Ri type_c_Ri type_e_Ri] [
+# Data for coprocessor instructions.
+define token coprocessor_data (16)
+    C_CRi = (0, 3)
+    C_Ri = (0, 3)
+    C_CRj = (4, 7)
+    C_Rj = (4, 7)
+    C_CC = (7, 15)
+;
+
+attach variables [type_a_Ri type_a_Rj type_b_Ri type_c_Ri type_e_Ri C_Ri C_Rj] [
     R0 R1 R2 R3 R4 R5 R6 R7 R8 R9 R10 R11 R12 R13 R14 R15
 ];
 attach variables [type_a_Ri_s type_a_Rj_s type_e_Rs] [
@@ -1211,6 +1220,41 @@ is type_d_u8 & type_d_OP=0b00011110
 {
     *:1 type_d_u8:4 = *:1 R13;
     R13 = R13 + 1;
+}
+
+# Coprocessor opcodes, all NO-OPS for now.
+:LDRES @type_c_Ri+, #type_c_i4
+is type_c_OP=0b10111100 & type_c_Ri & type_c_i4
+{
+    # We don't actually load the resource.
+    type_c_Ri = type_c_Ri + 4;
+}
+
+:STRES #type_c_i4, @type_c_Ri+
+is type_c_OP=0b10111101 & type_c_Ri & type_c_i4
+{
+    # We don't actually load the resource.
+    type_c_Ri = type_c_Ri + 4;
+}
+
+:COPOP #type_e_Ri, #C_CC, C_CRj, C_CRi
+is type_e_OP=0b100111111100 & type_e_Ri; C_CC & C_CRj & C_CRi
+{
+}
+
+:COPLD #type_e_Ri, #C_CC, C_Rj, C_CRi
+is type_e_OP=0b100111111101 & type_e_Ri; C_CC & C_Rj & C_CRi
+{
+}
+
+:COPST #type_e_Ri, #C_CC, C_CRj, C_Ri
+is type_e_OP=0b100111111110 & type_e_Ri; C_CC & C_CRj & C_Ri
+{
+}
+
+:COPSV #type_e_Ri, #C_CC, C_CRj, C_Ri
+is type_e_OP=0b100111111111 & type_e_Ri; C_CC & C_CRj & C_Ri
+{
 }
 
 :NOP
