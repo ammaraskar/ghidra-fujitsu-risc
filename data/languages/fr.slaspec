@@ -849,6 +849,7 @@ dest: rel is type_f_rel11 [ rel = inst_next + type_f_rel11*2; ]
 is type_f_OP=0b11010 & dest
 {
     RP = inst_next;
+    call dest;
 }
 
 :CALL @type_e_Ri
@@ -990,6 +991,133 @@ is branchDest & type_d_OP=0b11101110 {
 
 :BHI branchDest
 is branchDest & type_d_OP=0b11101111 {
+    if ((C || Z) == 0) goto branchDest;
+}
+
+# Delay slotted branch instructions
+
+:JMP":D" @type_e_Ri
+is type_e_OP=0b100111110000 & type_e_Ri
+{
+    delayslot(1);
+    goto type_e_Ri;
+}
+
+:CALL":D" dest
+is type_f_OP=0b11011 & dest
+{
+    RP = inst_next;
+    delayslot(1);
+    call dest;
+}
+
+:CALL":D" @type_e_Ri
+is type_e_OP=0b100111110001 & type_e_Ri
+{
+    RP = inst_next;
+    delayslot(1);
+    call type_e_Ri;
+}
+
+:RET":D"
+is opcode_00_15=0b1001111100100000
+{
+    delayslot(1);
+    return [RP];
+}
+
+:BRA":D" branchDest
+is branchDest & type_d_OP=0b11110000 {
+    delayslot(1);
+    goto branchDest;
+}
+
+:BNO":D" branchDest
+is branchDest & type_d_OP=0b11110001 {
+    delayslot(1);
+}
+
+:BEQ":D" branchDest
+is branchDest & type_d_OP=0b11110010 {
+    delayslot(1);
+    if (Z == 1) goto branchDest;
+}
+
+:BNE":D" branchDest
+is branchDest & type_d_OP=0b11110011 {
+    delayslot(1);
+    if (Z == 0) goto branchDest;
+}
+
+:BC":D" branchDest
+is branchDest & type_d_OP=0b11110100 {
+    delayslot(1);
+    if (C == 1) goto branchDest;
+}
+
+:BNC":D" branchDest
+is branchDest & type_d_OP=0b11110101 {
+    delayslot(1);
+    if (C == 0) goto branchDest;
+}
+
+:BN":D" branchDest
+is branchDest & type_d_OP=0b11110110 {
+    delayslot(1);
+    if (N == 1) goto branchDest;
+}
+
+:BP":D" branchDest
+is branchDest & type_d_OP=0b11110111 {
+    delayslot(1);
+    if (N == 0) goto branchDest;
+}
+
+:BV":D" branchDest
+is branchDest & type_d_OP=0b11111000 {
+    delayslot(1);
+    if (V == 1) goto branchDest;
+}
+
+:BNV":D" branchDest
+is branchDest & type_d_OP=0b11111001 {
+    delayslot(1);
+    if (V == 0) goto branchDest;
+}
+
+:BLT":D" branchDest
+is branchDest & type_d_OP=0b11111010 {
+    delayslot(1);
+    if (V ^ N == 1) goto branchDest;
+}
+
+:BGE":D" branchDest
+is branchDest & type_d_OP=0b11111011 {
+    delayslot(1);
+    if (V ^ N == 0) goto branchDest;
+}
+
+:BLE":D" branchDest
+is branchDest & type_d_OP=0b11111100 {
+    delayslot(1);
+    if ((V ^ N) || Z == 1) goto branchDest;
+}
+
+:BGT":D" branchDest
+is branchDest & type_d_OP=0b11111101 {
+    delayslot(1);
+    if ((V ^ N) || Z == 0) goto branchDest;
+}
+
+:BLS":D" branchDest
+is branchDest & type_d_OP=0b11111110 {
+    delayslot(1);
+    if ((C || Z) == 1) goto branchDest;
+}
+
+:BHI":D" branchDest
+is branchDest & type_d_OP=0b11111111 {
+    delayslot(1);
     if ((C || Z) == 0) goto branchDest;
 }
 
