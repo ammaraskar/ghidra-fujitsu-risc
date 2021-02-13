@@ -45,6 +45,7 @@ define token instr(16)
     type_c_OP = (8, 15)
 
     type_d_u8 = (0, 7)
+    type_d_u8_signed = (0, 7) signed
     type_d_OP = (8, 15)
 
     type_e_Ri = (0, 3)
@@ -839,7 +840,8 @@ is type_e_OP=0b100101110000 & type_e_Ri
     goto type_e_Ri;
 }
 
-dest: rel is type_f_rel11 [ rel = inst_next + type_f_rel11*2; ] {
+dest: rel is type_f_rel11 [ rel = inst_next + type_f_rel11*2; ]
+{
     export *:4 rel;
 }
 
@@ -860,6 +862,135 @@ is type_e_OP=0b100101110001 & type_e_Ri
 is opcode_00_15=0b1001011100100000
 {
     return [RP];
+}
+
+interruptTableLookup: handler
+is type_d_u8 [ handler = TBR + 0x3FC - (type_d_u8 * 4); ]
+{
+    export *:4 handler;
+}
+
+:INT #type_d_u8
+is type_d_OP=0b00011111 & type_d_u8 & interruptTableLookup
+{
+    SSP = SSP - 4;
+    # Doesn't push PS register for now.
+    SSP = SSP - 4;
+    *:4 SSP = inst_next;
+
+    I = 0;
+    S = 0;
+
+    call interruptTableLookup;
+}
+
+:INTE
+is opcode_00_15=0b1001111100110000
+{
+    SSP = SSP - 4;
+    # Doesn't push PS register for now.
+    SSP = SSP - 4;
+    *:4 SSP = inst_next;
+
+    ILM = 0x4;
+    S = 0;
+
+    local handler:4 = TBR + 0x3D8;
+    call [handler];
+}
+
+:RETI
+is opcode_00_15=0b1001011100110000
+{
+    call [R15];
+    R15 = R15 + 4;
+    # Doesn't pop the PS registr for now.
+    R15 = R15 + 4;
+}
+
+branchDest: rel is type_d_u8_signed [ rel = inst_next + type_d_u8_signed*2; ]
+{
+    export *:4 rel;
+}
+
+:BRA branchDest
+is branchDest & type_d_OP=0b11100000 {
+    goto branchDest;
+}
+
+:BNO branchDest
+is branchDest & type_d_OP=0b11100001 {
+    # no-op, this branch is never satisfied.
+}
+
+:BEQ branchDest
+is branchDest & type_d_OP=0b11100010 {
+    if (Z == 1) goto branchDest;
+}
+
+:BNE branchDest
+is branchDest & type_d_OP=0b11100011 {
+    if (Z == 0) goto branchDest;
+}
+
+:BC branchDest
+is branchDest & type_d_OP=0b11100100 {
+    if (C == 1) goto branchDest;
+}
+
+:BNC branchDest
+is branchDest & type_d_OP=0b11100101 {
+    if (C == 0) goto branchDest;
+}
+
+:BN branchDest
+is branchDest & type_d_OP=0b11100110 {
+    if (N == 1) goto branchDest;
+}
+
+:BP branchDest
+is branchDest & type_d_OP=0b11100111 {
+    if (N == 0) goto branchDest;
+}
+
+:BV branchDest
+is branchDest & type_d_OP=0b11101000 {
+    if (V == 1) goto branchDest;
+}
+
+:BNV branchDest
+is branchDest & type_d_OP=0b11101001 {
+    if (V == 0) goto branchDest;
+}
+
+:BLT branchDest
+is branchDest & type_d_OP=0b11101010 {
+    if (V ^ N == 1) goto branchDest;
+}
+
+:BGE branchDest
+is branchDest & type_d_OP=0b11101011 {
+    if (V ^ N == 0) goto branchDest;
+}
+
+:BLE branchDest
+is branchDest & type_d_OP=0b11101100 {
+    if ((V ^ N) || Z == 1) goto branchDest;
+}
+
+:BGT branchDest
+is branchDest & type_d_OP=0b11101101 {
+    if ((V ^ N) || Z == 0) goto branchDest;
+}
+
+:BLS branchDest
+is branchDest & type_d_OP=0b11101110 {
+    if ((C || Z) == 1) goto branchDest;
+}
+
+:BHI branchDest
+is branchDest & type_d_OP=0b11101111 {
+    if ((C || Z) == 0) goto branchDest;
 }
 
 :NOP
