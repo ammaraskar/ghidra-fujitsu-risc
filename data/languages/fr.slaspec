@@ -1257,6 +1257,66 @@ is type_e_OP=0b100111111111 & type_e_Ri; C_CC & C_CRj & C_Ri
 {
 }
 
+:ANDCCR #type_d_u8
+is type_d_OP=0b10000011 & type_d_u8
+{
+    local new_ccr:1 = type_d_u8;
+    C = C && new_ccr[0,1];
+    V = V && new_ccr[1,1];
+    Z = Z && new_ccr[2,1];
+    N = N && new_ccr[3,1];
+    I = I && new_ccr[4,1];
+    S = S && new_ccr[5,1];
+}
+
+:ORCCR #type_d_u8
+is type_d_OP=0b10010011 & type_d_u8
+{
+    local new_ccr:1 = type_d_u8;
+    C = C || new_ccr[0,1];
+    V = V || new_ccr[1,1];
+    Z = Z || new_ccr[2,1];
+    N = N || new_ccr[3,1];
+    I = I || new_ccr[4,1];
+    S = S || new_ccr[5,1];
+}
+
+:STILM #type_d_u8
+is type_d_OP=0b10000111 & type_d_u8
+{
+    ILM = type_d_u8;
+}
+
+:ADDSP #type_d_u8_signed
+is type_d_OP=0b10100011 & type_d_u8_signed
+{
+    R15 = R15 + (4 * type_d_u8_signed);
+}
+
+:EXTSB type_e_Ri
+is type_e_OP=0b100101111000 & type_e_Ri
+{
+    type_e_Ri = sext(type_e_Ri & 0xFF);
+}
+
+:EXTUB type_e_Ri
+is type_e_OP=0b100101111001 & type_e_Ri
+{
+    type_e_Ri = type_e_Ri & 0xFF;
+}
+
+:EXTSH type_e_Ri
+is type_e_OP=0b100101111010 & type_e_Ri
+{
+    type_e_Ri = sext(type_e_Ri & 0xFFFF);
+}
+
+:EXTUH type_e_Ri
+is type_e_OP=0b100101111011 & type_e_Ri
+{
+    type_e_Ri = type_e_Ri & 0xFFFF;
+}
+
 :NOP
 is opcode_00_15=0b1001111110100000
 {

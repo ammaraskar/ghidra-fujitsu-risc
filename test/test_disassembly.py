@@ -163,6 +163,14 @@ class DisassemblyTest(unittest.TestCase):
         (b'\x9F\xDF\x02\x11', 'COPLD #R15, #0x4, R1, 0x1'),
         (b'\x9F\xEF\x02\x11', 'COPST #R15, #0x4, 0x1, R1'),
         (b'\x9F\xFF\x02\x11', 'COPSV #R15, #0x4, 0x1, R1'),
+        (b'\x83\xFE', 'ANDCCR #0xfe'),
+        (b'\x93\x10', 'ORCCR #0x10'),
+        (b'\x87\x10', 'STILM #0x10'),
+        (b'\xA3\xFD', 'ADDSP #-0x3'),
+        (b'\x97\x80', 'EXTSB R0'),
+        (b'\x97\x91', 'EXTUB R1'),
+        (b'\x97\xA2', 'EXTSH R2'),
+        (b'\x97\xB3', 'EXTUH R3'),
     ]
 
     def test_single_opcodes(self):
