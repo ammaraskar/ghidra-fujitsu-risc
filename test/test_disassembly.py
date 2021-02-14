@@ -171,6 +171,14 @@ class DisassemblyTest(unittest.TestCase):
         (b'\x97\x91', 'EXTUB R1'),
         (b'\x97\xA2', 'EXTSH R2'),
         (b'\x97\xB3', 'EXTUH R3'),
+        (b'\x8C\xFF', 'LDM0 (R0, R1, R2, R3, R4, R5, R6, R7)'),
+        (b'\x8C\x91', 'LDM0 (R0, R4, R7)'),
+        (b'\x8D\xFF', 'LDM1 (R8, R9, R10, R11, R12, R13, R14, R15)'),
+        (b'\x8D\x91', 'LDM1 (R8, R12, R15)'),
+        (b'\x8E\xFF', 'STM0 (R7, R6, R5, R4, R3, R2, R1, R0)'),
+        (b'\x8E\x91', 'STM0 (R7, R3, R0)'),
+        (b'\x8F\xFF', 'STM1 (R15, R14, R13, R12, R11, R10, R9, R8)'),
+        (b'\x8F\x91', 'STM1 (R15, R11, R8)'),
     ]
 
     def test_single_opcodes(self):

@@ -56,6 +56,22 @@ define token instr(16)
     type_f_OP = (11, 15)
 
     opcode_00_15 = (0, 15)
+
+# Nonsense for register lists.
+    type_d_0 = (0, 0)
+    type_d_1 = (1, 1)
+    type_d_2 = (2, 2)
+    type_d_3 = (3, 3)
+    type_d_4 = (4, 4)
+    type_d_5 = (5, 5)
+    type_d_6 = (6, 6)
+    type_d_7 = (7, 7)
+    type_d_1_7 = (1, 7)
+    type_d_2_7 = (2, 7)
+    type_d_3_7 = (3, 7)
+    type_d_4_7 = (4, 7)
+    type_d_5_7 = (5, 7)
+    type_d_6_7 = (6, 7)
 ;
 define token data16 (16)
     imm16 = (0, 15)
@@ -1320,4 +1336,126 @@ is type_e_OP=0b100101111011 & type_e_Ri
 :NOP
 is opcode_00_15=0b1001111110100000
 {
+}
+
+# Register list arguments.
+LDM0_7:                      is type_d_7=0                     { }
+LDM0_7: R7                   is type_d_7=1 & R7                { R7 = *:4 R15; R15 = R15 + 4; }
+LDM0_6: LDM0_7               is type_d_6=0 & LDM0_7            { }
+LDM0_6: R6, LDM0_7           is type_d_6=1 & R6 & LDM0_7       { R6 = *:4 R15; R15 = R15 + 4; }
+LDM0_6: R6                   is type_d_6=1 & type_d_7=0 & R6   { R6 = *:4 R15; R15 = R15 + 4; }
+LDM0_5: LDM0_6               is type_d_5=0 & LDM0_6            { }
+LDM0_5: R5, LDM0_6           is type_d_5=1 & R5 & LDM0_6       { R5 = *:4 R15; R15 = R15 + 4; }
+LDM0_5: R5                   is type_d_5=1 & type_d_6_7=0 & R5 { R5 = *:4 R15; R15 = R15 + 4; }
+LDM0_4: LDM0_5               is type_d_4=0 & LDM0_5            { }
+LDM0_4: R4, LDM0_5           is type_d_4=1 & R4 & LDM0_5       { R4 = *:4 R15; R15 = R15 + 4; }
+LDM0_4: R4                   is type_d_4=1 & type_d_5_7=0 & R4 { R4 = *:4 R15; R15 = R15 + 4; }
+LDM0_3: LDM0_4               is type_d_3=0 & LDM0_4            { }
+LDM0_3: R3, LDM0_4           is type_d_3=1 & R3 & LDM0_4       { R3 = *:4 R15; R15 = R15 + 4; }
+LDM0_3: R3                   is type_d_3=1 & type_d_4_7=0 & R3 { R3 = *:4 R15; R15 = R15 + 4; }
+LDM0_2: LDM0_3               is type_d_2=0 & LDM0_3            { }
+LDM0_2: R2, LDM0_3           is type_d_2=1 & R2 & LDM0_3       { R2 = *:4 R15; R15 = R15 + 4; }
+LDM0_2: R2                   is type_d_2=1 & type_d_3_7=0 & R2 { R2 = *:4 R15; R15 = R15 + 4; }
+LDM0_1: LDM0_2               is type_d_1=0 & LDM0_2            { }
+LDM0_1: R1, LDM0_2           is type_d_1=1 & R1 & LDM0_2       { R1 = *:4 R15; R15 = R15 + 4; }
+LDM0_1: R1                   is type_d_1=1 & type_d_2_7=0 & R1 { R1 = *:4 R15; R15 = R15 + 4; }
+LDM0_0: LDM0_1               is type_d_0=0 & LDM0_1            { }
+LDM0_0: R0, LDM0_1           is type_d_0=1 & R0 & LDM0_1       { R0 = *:4 R15; R15 = R15 + 4; }
+LDM0_0: R0                   is type_d_0=1 & type_d_1_7=0 & R0 { R0 = *:4 R15; R15 = R15 + 4; }
+LDM0_list_inc: "("LDM0_0")"  is LDM0_0                         { }
+
+:LDM0 LDM0_list_inc is type_d_OP=0b10001100 & LDM0_list_inc
+{
+    build LDM0_list_inc;
+}
+
+LDM1_7:                       is type_d_7=0                      { }
+LDM1_7: R15                   is type_d_7=1 & R15                { R15 = *:4 R15; R15 = R15 + 4; }
+LDM1_6: LDM1_7                is type_d_6=0 & LDM1_7             { }
+LDM1_6: R14, LDM1_7           is type_d_6=1 & R14 & LDM1_7       { R14 = *:4 R15; R15 = R15 + 4; }
+LDM1_6: R14                   is type_d_6=1 & type_d_7=0 & R14   { R14 = *:4 R15; R15 = R15 + 4; }
+LDM1_5: LDM1_6                is type_d_5=0 & LDM1_6             { }
+LDM1_5: R13, LDM1_6           is type_d_5=1 & R13 & LDM1_6       { R13 = *:4 R15; R15 = R15 + 4; }
+LDM1_5: R13                   is type_d_5=1 & type_d_6_7=0 & R13 { R13 = *:4 R15; R15 = R15 + 4; }
+LDM1_4: LDM1_5                is type_d_4=0 & LDM1_5             { }
+LDM1_4: R12, LDM1_5           is type_d_4=1 & R12 & LDM1_5       { R12 = *:4 R15; R15 = R15 + 4; }
+LDM1_4: R12                   is type_d_4=1 & type_d_5_7=0 & R12 { R12 = *:4 R15; R15 = R15 + 4; }
+LDM1_3: LDM1_4                is type_d_3=0 & LDM1_4             { }
+LDM1_3: R11, LDM1_4           is type_d_3=1 & R11 & LDM1_4       { R11 = *:4 R15; R15 = R15 + 4; }
+LDM1_3: R11                   is type_d_3=1 & type_d_4_7=0 & R11 { R11 = *:4 R15; R15 = R15 + 4; }
+LDM1_2: LDM1_3                is type_d_2=0 & LDM1_3             { }
+LDM1_2: R10, LDM1_3           is type_d_2=1 & R10 & LDM1_3       { R10 = *:4 R15; R15 = R15 + 4; }
+LDM1_2: R10                   is type_d_2=1 & type_d_3_7=0 & R10 { R10 = *:4 R15; R15 = R15 + 4; }
+LDM1_1: LDM1_2                is type_d_1=0 & LDM1_2             { }
+LDM1_1: R9, LDM1_2            is type_d_1=1 & R9 & LDM1_2        { R9 = *:4 R15; R15 = R15 + 4; }
+LDM1_1: R9                    is type_d_1=1 & type_d_2_7=0 & R9  { R9 = *:4 R15; R15 = R15 + 4; }
+LDM1_0: LDM1_1                is type_d_0=0 & LDM1_1             { }
+LDM1_0: R8, LDM1_1            is type_d_0=1 & R8 & LDM1_1        { R8 = *:4 R15; R15 = R15 + 4; }
+LDM1_0: R8                    is type_d_0=1 & type_d_1_7=0 & R8  { R8 = *:4 R15; R15 = R15 + 4; }
+LDM1_list_inc: "("LDM1_0")"   is LDM1_0                          { }
+
+:LDM1 LDM1_list_inc is type_d_OP=0b10001101 & LDM1_list_inc
+{
+    build LDM1_list_inc;
+}
+
+# Register list arguments.
+STM0_7:                      is type_d_7=0                     { }
+STM0_7: R0                   is type_d_7=1 & R0                { R15 = R15 - 4; *:4 R15 = R0; }
+STM0_6: STM0_7               is type_d_6=0 & STM0_7            { }
+STM0_6: R1, STM0_7           is type_d_6=1 & R1 & STM0_7       { R15 = R15 - 4; *:4 R15 = R1; }
+STM0_6: R1                   is type_d_6=1 & type_d_7=0 & R1   { R15 = R15 - 4; *:4 R15 = R1; }
+STM0_5: STM0_6               is type_d_5=0 & STM0_6            { }
+STM0_5: R2, STM0_6           is type_d_5=1 & R2 & STM0_6       { R15 = R15 - 4; *:4 R15 = R2; }
+STM0_5: R2                   is type_d_5=1 & type_d_6_7=0 & R2 { R15 = R15 - 4; *:4 R15 = R2; }
+STM0_4: STM0_5               is type_d_4=0 & STM0_5            { }
+STM0_4: R3, STM0_5           is type_d_4=1 & R3 & STM0_5       { R15 = R15 - 4; *:4 R15 = R3; }
+STM0_4: R3                   is type_d_4=1 & type_d_5_7=0 & R3 { R15 = R15 - 4; *:4 R15 = R3; }
+STM0_3: STM0_4               is type_d_3=0 & STM0_4            { }
+STM0_3: R4, STM0_4           is type_d_3=1 & R4 & STM0_4       { R15 = R15 - 4; *:4 R15 = R4; }
+STM0_3: R4                   is type_d_3=1 & type_d_4_7=0 & R4 { R15 = R15 - 4; *:4 R15 = R4; }
+STM0_2: STM0_3               is type_d_2=0 & STM0_3            { }
+STM0_2: R5, STM0_3           is type_d_2=1 & R5 & STM0_3       { R15 = R15 - 4; *:4 R15 = R5; }
+STM0_2: R5                   is type_d_2=1 & type_d_3_7=0 & R5 { R15 = R15 - 4; *:4 R15 = R5; }
+STM0_1: STM0_2               is type_d_1=0 & STM0_2            { }
+STM0_1: R6, STM0_2           is type_d_1=1 & R6 & STM0_2       { R15 = R15 - 4; *:4 R15 = R6; }
+STM0_1: R6                   is type_d_1=1 & type_d_2_7=0 & R6 { R15 = R15 - 4; *:4 R15 = R6; }
+STM0_0: STM0_1               is type_d_0=0 & STM0_1            { }
+STM0_0: R7, STM0_1           is type_d_0=1 & R7 & STM0_1       { R15 = R15 - 4; *:4 R15 = R7; }
+STM0_0: R7                   is type_d_0=1 & type_d_1_7=0 & R7 { R15 = R15 - 4; *:4 R15 = R7; }
+STM0_list_inc: "("STM0_0")"  is STM0_0                         { }
+
+:STM0 STM0_list_inc is type_d_OP=0b10001110 & STM0_list_inc
+{
+    build STM0_list_inc;
+}
+
+STM1_7:                       is type_d_7=0                      { }
+STM1_7: R8                    is type_d_7=1 & R8                 { R15 = R15 - 4; *:4 R15 = R8; }
+STM1_6: STM1_7                is type_d_6=0 & STM1_7             { }
+STM1_6: R9, STM1_7            is type_d_6=1 & R9 & STM1_7        { R15 = R15 - 4; *:4 R15 = R9; }
+STM1_6: R9                    is type_d_6=1 & type_d_7=0 & R9    { R15 = R15 - 4; *:4 R15 = R9; }
+STM1_5: STM1_6                is type_d_5=0 & STM1_6             { }
+STM1_5: R10, STM1_6           is type_d_5=1 & R10 & STM1_6       { R15 = R15 - 4; *:4 R15 = R10; }
+STM1_5: R10                   is type_d_5=1 & type_d_6_7=0 & R10 { R15 = R15 - 4; *:4 R15 = R10; }
+STM1_4: STM1_5                is type_d_4=0 & STM1_5             { }
+STM1_4: R11, STM1_5           is type_d_4=1 & R11 & STM1_5       { R15 = R15 - 4; *:4 R15 = R11; }
+STM1_4: R11                   is type_d_4=1 & type_d_5_7=0 & R11 { R15 = R15 - 4; *:4 R15 = R11; }
+STM1_3: STM1_4                is type_d_3=0 & STM1_4             { }
+STM1_3: R12, STM1_4           is type_d_3=1 & R12 & STM1_4       { R15 = R15 - 4; *:4 R15 = R12; }
+STM1_3: R12                   is type_d_3=1 & type_d_4_7=0 & R12 { R15 = R15 - 4; *:4 R15 = R12; }
+STM1_2: STM1_3                is type_d_2=0 & STM1_3             { }
+STM1_2: R13, STM1_3           is type_d_2=1 & R13 & STM1_3       { R15 = R15 - 4; *:4 R15 = R13; }
+STM1_2: R13                   is type_d_2=1 & type_d_3_7=0 & R13 { R15 = R15 - 4; *:4 R15 = R13; }
+STM1_1: STM1_2                is type_d_1=0 & STM1_2             { }
+STM1_1: R14, STM1_2           is type_d_1=1 & R14 & STM1_2       { R15 = R15 - 4; *:4 R15 = R14; }
+STM1_1: R14                   is type_d_1=1 & type_d_2_7=0 & R14 { R15 = R15 - 4; *:4 R15 = R14; }
+STM1_0: STM1_1                is type_d_0=0 & STM1_1             { }
+STM1_0: R15, STM1_1           is type_d_0=1 & R15 & STM1_1       { R15 = R15 - 4; *:4 R15 = R15; }
+STM1_0: R15                   is type_d_0=1 & type_d_1_7=0 & R15 { R15 = R15 - 4; *:4 R15 = R15; }
+STM1_list_inc: "("STM1_0")"   is STM1_0                          { }
+
+:STM1 STM1_list_inc is type_d_OP=0b10001111 & STM1_list_inc
+{
+    build STM1_list_inc;
 }
