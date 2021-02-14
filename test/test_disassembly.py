@@ -179,6 +179,9 @@ class DisassemblyTest(unittest.TestCase):
         (b'\x8E\x91', 'STM0 (R7, R3, R0)'),
         (b'\x8F\xFF', 'STM1 (R15, R14, R13, R12, R11, R10, R9, R8)'),
         (b'\x8F\x91', 'STM1 (R15, R11, R8)'),
+        (b'\x0F\x10', 'ENTER #0x40'),
+        (b'\x9F\x90', 'LEAVE'),
+        (b'\x8A\x35', 'XCHB @R3, R5'),
     ]
 
     def test_single_opcodes(self):
