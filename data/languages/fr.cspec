@@ -28,6 +28,8 @@
 
     <stackpointer register="r15" space="ram" growth="negative" />
 
+    <!-- From https://www.fujitsu.com/downloads/MICRO/fma/pdfmcu/softccmp-v6-cm81-00206-6e.pdf -->
+    <!-- FR Family SOFTUNE C/C++ Compiler Manual -->
     <default_proto>
         <prototype name="__stdcall" extrapop="0" stackshift="0">
             <input>
