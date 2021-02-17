@@ -879,7 +879,7 @@ is type_f_OP=0b11010 & dest
 is type_e_OP=0b100101110001 & type_e_Ri
 {
     RP = inst_next;
-    call type_e_Ri;
+    call [type_e_Ri];
 }
 
 :RET
@@ -1039,7 +1039,7 @@ is type_e_OP=0b100111110001 & type_e_Ri
 {
     RP = inst_next;
     delayslot(1);
-    call type_e_Ri;
+    call [type_e_Ri];
 }
 
 :RET":D"
