@@ -49,10 +49,10 @@
             </input>
             <output killedbycall="true">
                 <pentry minsize="1" maxsize="4" extension="inttype">
-                    <register name="r0" />
+                    <register name="r4" />
                 </pentry>
                 <pentry minsize="5" maxsize="8">
-                    <addr space="join" piece1="r1" piece2="r0" />
+                    <addr space="join" piece1="r4" piece2="r5" />
                 </pentry>
             </output>
             <unaffected>
@@ -60,15 +60,9 @@
                 <register name="r9" />
                 <register name="r10" />
                 <register name="r11" />
-                <register name="r12" />
-                <register name="r13" />
                 <register name="r14" />
                 <register name="r15" />
             </unaffected>
-            <killedbycall>
-                <register name="r2" />
-                <register name="r3" />
-            </killedbycall>
         </prototype>
     </default_proto>
 </compiler_spec>
