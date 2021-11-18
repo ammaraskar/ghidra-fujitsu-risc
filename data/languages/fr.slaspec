@@ -860,7 +860,7 @@ is type_e_OP=0b000001110001 & type_e_Ri
 :JMP @type_e_Ri
 is type_e_OP=0b100101110000 & type_e_Ri
 {
-    goto type_e_Ri;
+    goto [type_e_Ri];
 }
 
 dest: rel is type_f_rel11 [ rel = inst_next + type_f_rel11*2; ]
@@ -1023,7 +1023,7 @@ is branchDest & type_d_OP=0b11101111 {
 is type_e_OP=0b100111110000 & type_e_Ri
 {
     delayslot(1);
-    goto type_e_Ri;
+    goto [type_e_Ri];
 }
 
 :CALL":D" dest
