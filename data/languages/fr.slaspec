@@ -766,37 +766,37 @@ is opcode_00_15=0b0001011110010000
 :STH type_a_Ri, @type_a_Rj
 is type_a_OP=0b00010101 & type_a_Rj & type_a_Ri
 {
-    *:2 type_a_Rj = type_a_Ri;
+    * type_a_Rj = type_a_Ri:2;
 }
 
 :STH type_a_Ri, @("R13" + type_a_Rj)
 is type_a_OP=0b00010001 & type_a_Rj & type_a_Ri
 {
-    *:2 (R13 + type_a_Rj) = type_a_Ri;
+    * (R13 + type_a_Rj) = type_a_Ri:2;
 }
 
 :STH type_b_Ri, @("R14" + 2 * type_b_i8_signed)
 is type_b_OP=0b0101 & type_b_i8_signed & type_b_Ri
 {
-    *:2 (R14 + (2 * type_b_i8_signed)) = type_b_Ri;
+    * (R14 + (2 * type_b_i8_signed)) = type_b_Ri:2;
 }
 
 :STB type_a_Ri, @type_a_Rj
 is type_a_OP=0b00010110 & type_a_Rj & type_a_Ri
 {
-    *:1 type_a_Rj = type_a_Ri;
+    * type_a_Rj = type_a_Ri:1;
 }
 
 :STB type_a_Ri, @("R13" + type_a_Rj)
 is type_a_OP=0b00010010 & type_a_Rj & type_a_Ri
 {
-    *:1 (R13 + type_a_Rj) = type_a_Ri;
+    * (R13 + type_a_Rj) = type_a_Ri:1;
 }
 
 :STB type_b_Ri, @("R14" + type_b_i8_signed)
 is type_b_OP=0b0111 & type_b_i8_signed & type_b_Ri
 {
-    *:1 (R14 + type_b_i8_signed) = type_b_Ri;
+    * (R14 + type_b_i8_signed) = type_b_Ri:1;
 }
 
 :MOV type_a_Rj, type_a_Ri
@@ -1187,13 +1187,13 @@ is type_d_u8 & type_d_OP=0b00011011 [ dir8 = type_d_u8 * 4; ]
 :DMOVH @dir8, "R13"
 is type_d_u8 & type_d_OP=0b00001001 [ dir8 = type_d_u8 * 2; ]
 {
-    R13 = *:2 dir8:4;
+    R13 = zext(*:2 dir8:4);
 }
 
 :DMOVH "R13", @dir8
 is type_d_u8 & type_d_OP=0b00011001 [ dir8 = type_d_u8 * 2; ]
 {
-    *:2 dir8:4 = R13;
+    * dir8:4 = R13:2;
 }
 
 :DMOVH @dir8, "@R13+"
@@ -1213,13 +1213,13 @@ is type_d_u8 & type_d_OP=0b00011101 [ dir8 = type_d_u8 * 2; ]
 :DMOVB @type_d_u8, "R13"
 is type_d_u8 & type_d_OP=0b00001010
 {
-    R13 = *:1 type_d_u8:4;
+    R13 = zext(*:1 type_d_u8:4);
 }
 
 :DMOVB "R13", @type_d_u8
 is type_d_u8 & type_d_OP=0b00011010
 {
-    *:1 type_d_u8:4 = R13;
+    * type_d_u8:4 = R13:1;
 }
 
 :DMOVB @type_d_u8, "@R13+"
