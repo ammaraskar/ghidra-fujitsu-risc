@@ -926,10 +926,11 @@ is opcode_00_15=0b1001111100110000
 :RETI
 is opcode_00_15=0b1001011100110000
 {
-    call [R15];
+    PC = *:4 R15;
     R15 = R15 + 4;
     # Doesn't pop the PS registr for now.
     R15 = R15 + 4;
+    return [PC];
 }
 
 branchDest: rel is type_d_u8_signed [ rel = inst_next + type_d_u8_signed*2; ]
