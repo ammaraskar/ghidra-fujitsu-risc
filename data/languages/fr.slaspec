@@ -209,8 +209,8 @@ is type_a_OP=0b10101110 & type_a_Rj & type_a_Ri
 :CMP type_a_Rj, type_a_Ri
 is type_a_OP=0b10101010 & type_a_Rj & type_a_Ri
 {
-    local result = type_a_Rj - type_a_Ri;
-    subtractionResultFlags(type_a_Rj, type_a_Ri, result);
+    local result = type_a_Ri - type_a_Rj;
+    subtractionResultFlags(type_a_Ri, type_a_Rj, result);
 }
 
 :CMP #type_c_i4, type_c_Ri
