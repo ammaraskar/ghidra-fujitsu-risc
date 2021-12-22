@@ -209,8 +209,8 @@ is type_a_OP=0b10101110 & type_a_Rj & type_a_Ri
 :CMP type_a_Rj, type_a_Ri
 is type_a_OP=0b10101010 & type_a_Rj & type_a_Ri
 {
-    local result = type_a_Rj - type_a_Ri;
-    subtractionResultFlags(type_a_Rj, type_a_Ri, result);
+    local result = type_a_Ri - type_a_Rj;
+    subtractionResultFlags(type_a_Ri, type_a_Rj, result);
 }
 
 :CMP #type_c_i4, type_c_Ri
@@ -347,16 +347,14 @@ is type_c_OP=0b10000001 & type_c_Ri & type_c_i4
 is type_c_OP=0b10010000 & type_c_Ri & type_c_i4
 {
     local memory_value:1 = *:1 type_c_Ri;
-    local result = (memory_value & 0x0F) | type_c_i4;
-    *:1 type_c_Ri = (memory_value & 0xF0) | (result & 0x0F);
+    *:1 type_c_Ri = memory_value | type_c_i4;
 }
 
 :BORH #type_c_i4, type_c_Ri
 is type_c_OP=0b10010001 & type_c_Ri & type_c_i4
 {
     local memory_value:1 = *:1 type_c_Ri;
-    local result = (memory_value & 0xF0) | (type_c_i4 << 4);
-    *:1 type_c_Ri = (result & 0xF0) | (memory_value & 0x0F);
+    *:1 type_c_Ri = memory_value | (type_c_i4 << 4);
 }
 
 :BEORL #type_c_i4, type_c_Ri
@@ -926,10 +924,11 @@ is opcode_00_15=0b1001111100110000
 :RETI
 is opcode_00_15=0b1001011100110000
 {
-    call [R15];
+    PC = *:4 R15;
     R15 = R15 + 4;
     # Doesn't pop the PS registr for now.
     R15 = R15 + 4;
+    return [PC];
 }
 
 branchDest: rel is type_d_u8_signed [ rel = inst_next + type_d_u8_signed*2; ]
