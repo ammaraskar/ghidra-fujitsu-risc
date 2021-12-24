@@ -42,6 +42,7 @@ define token instr(16)
     type_c_Ri = (0, 3)
     type_c_i4 = (4, 7)
     type_c_i4_signed = (4, 7) signed
+    type_c_i4_minusext = (4, 7)
     type_c_OP = (8, 15)
 
     type_d_u8 = (0, 7)
@@ -96,6 +97,9 @@ attach variables [type_a_Ri_s type_a_Rj_s type_e_Rs] [
     TBR RP SSP USP MDH MDL _ _ _ _ _ _ _ _ _ _
 ];
 
+# Minus extension token: portion lacking higher bits is complemented by adding 1s
+attach values type_c_i4_minusext  [ -16 -15 -14 -13 -12 -11 -10 -9 -8 -7 -6 -5 -4 -3 -2 -1 ];
+
 macro resultFlags(result) {
     Z = (result == 0);
 	N = (result s< 0);
@@ -134,13 +138,12 @@ is type_c_OP=0b10100100 & type_c_Ri & type_c_i4
     type_c_Ri = result;
 }
 
-:ADD2 #type_c_i4_signed, type_c_Ri
-is type_c_OP=0b10100101 & type_c_Ri & type_c_i4_signed
+:ADD2 #type_c_i4_minusext, type_c_Ri
+is type_c_OP=0b10100101 & type_c_Ri & type_c_i4_minusext
 {
-    local extended_imm4:4 = type_c_i4_signed;
-    local result = type_c_Ri + extended_imm4;
+    local result = type_c_Ri + type_c_i4_minusext;
 
-    additionResultFlags(extended_imm4, type_c_Ri, result);
+    additionResultFlags(type_c_Ri, type_c_i4_minusext, result);
     type_c_Ri = result;
 }
 
@@ -172,10 +175,10 @@ is type_c_OP=0b10100000 & type_c_Ri & type_c_i4
     type_c_Ri = type_c_Ri + type_c_i4;
 }
 
-:ADDN2 #type_c_i4_signed, type_c_Ri
-is type_c_OP=0b10100001 & type_c_Ri & type_c_i4_signed
+:ADDN2 #type_c_i4_minusext, type_c_Ri
+is type_c_OP=0b10100001 & type_c_Ri & type_c_i4_minusext
 {
-    type_c_Ri = type_c_Ri + type_c_i4_signed;
+    type_c_Ri = type_c_Ri + type_c_i4_minusext;
 }
 
 :SUB type_a_Rj, type_a_Ri
@@ -222,13 +225,12 @@ is type_c_OP=0b10101000 & type_c_Ri & type_c_i4
     subtractionResultFlags(type_c_Ri, extended_imm4, result);
 }
 
-:CMP2 #type_c_i4_signed, type_c_Ri
-is type_c_OP=0b10101001 & type_c_Ri & type_c_i4_signed
+:CMP2 #type_c_i4_minusext, type_c_Ri
+is type_c_OP=0b10101001 & type_c_Ri & type_c_i4_minusext
 {
-    local extended_imm4:4 = type_c_i4_signed;
-    local result = type_c_Ri - extended_imm4;
+    local result = type_c_Ri - type_c_i4_minusext;
 
-    subtractionResultFlags(type_c_Ri, extended_imm4, result);
+    subtractionResultFlags(type_c_Ri, type_c_i4_minusext, result);
 }
 
 :AND type_a_Rj, type_a_Ri
