@@ -1063,86 +1063,100 @@ is branchDest & type_d_OP=0b11110001 {
 
 :BEQ":D" branchDest
 is branchDest & type_d_OP=0b11110010 {
+    local cond:1 = Z;
     delayslot(1);
-    if (Z) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :BNE":D" branchDest
 is branchDest & type_d_OP=0b11110011 {
+    local cond:1 = !Z;
     delayslot(1);
-    if (!Z) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :BC":D" branchDest
 is branchDest & type_d_OP=0b11110100 {
+    local cond:1 = C;
     delayslot(1);
-    if (C) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :BNC":D" branchDest
 is branchDest & type_d_OP=0b11110101 {
+    local cond:1 = !C;
     delayslot(1);
-    if (!C) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :BN":D" branchDest
 is branchDest & type_d_OP=0b11110110 {
+    local cond:1 = N;
     delayslot(1);
-    if (N) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :BP":D" branchDest
 is branchDest & type_d_OP=0b11110111 {
+    local cond:1 = !N;
     delayslot(1);
-    if (!N) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :BV":D" branchDest
 is branchDest & type_d_OP=0b11111000 {
+    local cond:1 = V;
     delayslot(1);
-    if (V) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :BNV":D" branchDest
 is branchDest & type_d_OP=0b11111001 {
+    local cond:1 = !V;
     delayslot(1);
-    if (!V) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :BLT":D" branchDest
 is branchDest & type_d_OP=0b11111010 {
+    local cond:1 = (V != N);
     delayslot(1);
-    if (V != N) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :BGE":D" branchDest
 is branchDest & type_d_OP=0b11111011 {
+    local cond:1 = (V == N);
     delayslot(1);
-    if (V == N) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :BLE":D" branchDest
 is branchDest & type_d_OP=0b11111100 {
+    local cond:1 = (Z || (V != N));
     delayslot(1);
-    if (Z || (V != N)) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :BGT":D" branchDest
 is branchDest & type_d_OP=0b11111101 {
+    local cond:1 = (!Z && (V == N));
     delayslot(1);
-    if (!Z && (V == N)) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :BLS":D" branchDest
 is branchDest & type_d_OP=0b11111110 {
+    local cond:1 = (C || Z);
     delayslot(1);
-    if (C || Z) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :BHI":D" branchDest
 is branchDest & type_d_OP=0b11111111 {
+    local cond:1 = !(C || Z);
     delayslot(1);
-    if !(C || Z) goto branchDest;
+    if (cond) goto branchDest;
 }
 
 :DMOV @dir8, "R13"
