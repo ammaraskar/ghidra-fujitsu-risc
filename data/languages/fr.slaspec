@@ -329,7 +329,7 @@ is type_a_OP=0b10011110 & type_a_Rj & type_a_Ri
     *:1 type_a_Ri = result;
 }
 
-:BANDL #type_c_i4, type_c_Ri
+:BANDL #type_c_i4, @type_c_Ri
 is type_c_OP=0b10000000 & type_c_Ri & type_c_i4
 {
     local memory_value:1 = *:1 type_c_Ri;
@@ -337,7 +337,7 @@ is type_c_OP=0b10000000 & type_c_Ri & type_c_i4
     *:1 type_c_Ri = (memory_value & 0xF0) | (result & 0x0F);
 }
 
-:BANDH #type_c_i4, type_c_Ri
+:BANDH #type_c_i4, @type_c_Ri
 is type_c_OP=0b10000001 & type_c_Ri & type_c_i4
 {
     local memory_value:1 = *:1 type_c_Ri;
@@ -345,21 +345,21 @@ is type_c_OP=0b10000001 & type_c_Ri & type_c_i4
     *:1 type_c_Ri = (result & 0xF0) | (memory_value & 0x0F);
 }
 
-:BORL #type_c_i4, type_c_Ri
+:BORL #type_c_i4, @type_c_Ri
 is type_c_OP=0b10010000 & type_c_Ri & type_c_i4
 {
     local memory_value:1 = *:1 type_c_Ri;
     *:1 type_c_Ri = memory_value | type_c_i4;
 }
 
-:BORH #type_c_i4, type_c_Ri
+:BORH #type_c_i4, @type_c_Ri
 is type_c_OP=0b10010001 & type_c_Ri & type_c_i4
 {
     local memory_value:1 = *:1 type_c_Ri;
     *:1 type_c_Ri = memory_value | (type_c_i4 << 4);
 }
 
-:BEORL #type_c_i4, type_c_Ri
+:BEORL #type_c_i4, @type_c_Ri
 is type_c_OP=0b10011000 & type_c_Ri & type_c_i4
 {
     local memory_value:1 = *:1 type_c_Ri;
@@ -367,7 +367,7 @@ is type_c_OP=0b10011000 & type_c_Ri & type_c_i4
     *:1 type_c_Ri = (memory_value & 0xF0) | (result & 0x0F);
 }
 
-:BEORH #type_c_i4, type_c_Ri
+:BEORH #type_c_i4, @type_c_Ri
 is type_c_OP=0b10011001 & type_c_Ri & type_c_i4
 {
     local memory_value:1 = *:1 type_c_Ri;
@@ -375,7 +375,7 @@ is type_c_OP=0b10011001 & type_c_Ri & type_c_i4
     *:1 type_c_Ri = (result & 0xF0) | (memory_value & 0x0F);
 }
 
-:BTSTL #type_c_i4, type_c_Ri
+:BTSTL #type_c_i4, @type_c_Ri
 is type_c_OP=0b10001000 & type_c_Ri & type_c_i4
 {
     local memory_value:1 = *:1 type_c_Ri;
@@ -385,7 +385,7 @@ is type_c_OP=0b10001000 & type_c_Ri & type_c_i4
     Z = (result == 0);
 }
 
-:BTSTH #type_c_i4, type_c_Ri
+:BTSTH #type_c_i4, @type_c_Ri
 is type_c_OP=0b10001001 & type_c_Ri & type_c_i4
 {
     local memory_value:1 = *:1 type_c_Ri;
